@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="CoefficientCoding\" />
+    <Folder Include="DCLevelShifting\" />
+    <Folder Include="EntropyCoding\" />
+    <Folder Include="MultipleComponentTransformation\" />
+    <Folder Include="WaveletTransformation\" />
+    <Folder Include="Quantization\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+</Project>
