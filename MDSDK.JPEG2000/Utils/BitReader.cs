@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
+using MDSDK.BinaryIO;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -7,13 +8,13 @@ namespace MDSDK.JPEG2000.Utils
 {
     class BitReader
     {
-        private readonly ByteReader _input;
+        private readonly BinaryStreamReader _input;
 
         private uint _bits;
 
         private int _bitCount;
 
-        internal BitReader(ByteReader input)
+        internal BitReader(BinaryStreamReader input)
         {
             _input = input;
         }

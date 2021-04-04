@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
+using MDSDK.BinaryIO;
 using MDSDK.JPEG2000.CoefficientCoding;
 using MDSDK.JPEG2000.Model;
 using MDSDK.JPEG2000.Utils;
@@ -14,11 +15,11 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 {
     internal class CodestreamReader
     {
-        public ByteReader Input { get; }
+        public BinaryStreamReader Input { get; }
 
         public Image Image { get; }
 
-        public CodestreamReader(ByteReader input)
+        public CodestreamReader(BinaryStreamReader input)
         {
             Input = input;
 
@@ -120,12 +121,12 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         private void ReadMarkerSegment(Action read)
         {
-            var length = BigEndian.ReadUInt16(Input);
-            using (Input.Window(length - 2))
+            var length = Input.Read<UInt16>();
+            Input.Read(length - 2, () =>
             {
                 read.Invoke();
                 Input.SkipRemainingBytes();
-            }
+            });
         }
 
         private void DecodePacketsInLayerResolutionComponentPositionOrder(TilePartHeader tilePartHeader, TilePartComponent[] tilePartComponents)
@@ -204,7 +205,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
             }
 
             var bytes = new byte[codeBlock.LengthInBytes + 2];
-            Input.ReadBytes(bytes, 0, (int)codeBlock.LengthInBytes);
+            Input.ReadAll(bytes.AsSpan(0, (int)codeBlock.LengthInBytes));
 
             // Two 0xFF bytes must be added to flush the entropy coder (see D.4.1 "Expected codestream termination")
 

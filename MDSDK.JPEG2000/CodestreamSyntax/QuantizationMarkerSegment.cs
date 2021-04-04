@@ -4,6 +4,7 @@ using static MDSDK.JPEG2000.Utils.StaticInclude;
 using System;
 using MDSDK.JPEG2000.Model;
 using MDSDK.JPEG2000.Utils;
+using MDSDK.BinaryIO;
 
 namespace MDSDK.JPEG2000.CodestreamSyntax
 {
@@ -17,7 +18,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         public QuantizationStepSize[] QuantizationStepSizes { get; private set; }
 
-        private void ReadReversibleStepSizes(ByteReader input)
+        private void ReadReversibleStepSizes(BinaryStreamReader input)
         {
             ReversibleStepSizes = new ReversibleStepSize[input.BytesRemaining];
 
@@ -28,25 +29,25 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
             }
         }
 
-        private void ReadQuantizationStepSizes(ByteReader input)
+        private void ReadQuantizationStepSizes(BinaryStreamReader input)
         {
             QuantizationStepSizes = new QuantizationStepSize[input.BytesRemaining / 2];
 
             for (var i = 0; i < QuantizationStepSizes.Length; i++)
             {
-                var us = BigEndian.ReadUInt16(input);
+                var us = input.Read<UInt16>();
                 QuantizationStepSizes[i] = new QuantizationStepSize(us);
             }
         }
 
-        protected void Read_S_QuantizationStyle(ByteReader input)
+        protected void Read_S_QuantizationStyle(BinaryStreamReader input)
         {
             var b = input.ReadByte();
             QuantizationStyle = (QuantizationStyle)(b & 0x1F);
             NGuardBits_G = b >> 5;
         }
 
-        protected void Read_SP_Parameters(ByteReader input)
+        protected void Read_SP_Parameters(BinaryStreamReader input)
         {
             if (QuantizationStyle == QuantizationStyle.NoQuantization)
             {

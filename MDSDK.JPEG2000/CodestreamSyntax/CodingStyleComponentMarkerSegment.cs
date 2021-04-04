@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
+using MDSDK.BinaryIO;
 using MDSDK.JPEG2000.Utils;
+using System;
 using System.Diagnostics;
 
 namespace MDSDK.JPEG2000.CodestreamSyntax
@@ -9,11 +11,11 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
     {
         public int C_ComponentIndex { get; private set; }
 
-        private void Read_C_ComponentIndex(ByteReader input, int nComponents)
+        private void Read_C_ComponentIndex(BinaryStreamReader input, int nComponents)
         {
             if (nComponents > 256)
             {
-                C_ComponentIndex = BigEndian.ReadUInt16(input);
+                C_ComponentIndex = input.Read<UInt16>();
             }
             else
             {

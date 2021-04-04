@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
 using MDSDK.JPEG2000.Utils;
+using System;
 using System.Text;
 
 namespace MDSDK.JPEG2000.CodestreamSyntax
@@ -17,7 +18,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
         {
             var input = reader.Input;
 
-            R_RegistrationValue = BigEndian.ReadUInt16(input);
+            R_RegistrationValue = input.Read<UInt16>();
 
             Data = input.ReadRemainingBytes();
 

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
+using MDSDK.BinaryIO;
 using MDSDK.JPEG2000.Utils;
+using System;
 using System.Diagnostics;
 
 namespace MDSDK.JPEG2000.CodestreamSyntax
@@ -35,7 +37,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
             public byte YR_VerticalSubSamplingFactor { get; set; }
 
-            public static ComponentSpecification ReadFrom(ByteReader input)
+            public static ComponentSpecification ReadFrom(BinaryStreamReader input)
             {
                 return new ComponentSpecification
                 {
@@ -52,16 +54,16 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
         {
             var input = reader.Input;
 
-            R_CapabilitiesOfCodestream = BigEndian.ReadUInt16(input);
-            X_ReferenceGridWidth = checked((int)BigEndian.ReadUInt32(input));
-            Y_ReferenceGridHeight = checked((int)BigEndian.ReadUInt32(input));
-            XO_HorizontalOffsetOfImageAreaInReferenceGrid = checked((int)BigEndian.ReadUInt32(input));
-            YO_VerticalOffsetOfImageAreaInReferenceGrid = checked((int)BigEndian.ReadUInt32(input));
-            XT_TileWidth = checked((int)BigEndian.ReadUInt32(input));
-            YT_TileHeight = checked((int)BigEndian.ReadUInt32(input));
-            XT_HorizontalOffsetOfFirstTileInReferenceGrid = checked((int)BigEndian.ReadUInt32(input));
-            YTO_VerticalOffsetOfFirstTileInReferenceGrid = checked((int)BigEndian.ReadUInt32(input));
-            C_NumberOfImageComponents = BigEndian.ReadUInt16(input);
+            R_CapabilitiesOfCodestream = input.Read<UInt16>();
+            X_ReferenceGridWidth = checked((int)input.Read<UInt32>());
+            Y_ReferenceGridHeight = checked((int)input.Read<UInt32>());
+            XO_HorizontalOffsetOfImageAreaInReferenceGrid = checked((int)input.Read<UInt32>());
+            YO_VerticalOffsetOfImageAreaInReferenceGrid = checked((int)input.Read<UInt32>());
+            XT_TileWidth = checked((int)input.Read<UInt32>());
+            YT_TileHeight = checked((int)input.Read<UInt32>());
+            XT_HorizontalOffsetOfFirstTileInReferenceGrid = checked((int)input.Read<UInt32>());
+            YTO_VerticalOffsetOfFirstTileInReferenceGrid = checked((int)input.Read<UInt32>());
+            C_NumberOfImageComponents = input.Read<UInt16>();
 
             var componentSpecifications = new ComponentSpecification[C_NumberOfImageComponents];
             for (var i = 0; i < componentSpecifications.Length; i++)

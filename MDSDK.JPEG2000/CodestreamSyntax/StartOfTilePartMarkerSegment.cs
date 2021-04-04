@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
 using MDSDK.JPEG2000.Utils;
+using System;
 using System.Diagnostics;
 
 namespace MDSDK.JPEG2000.CodestreamSyntax
@@ -19,8 +20,8 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
         {
             var input = reader.Input;
 
-            I_TileIndexNumber = BigEndian.ReadUInt16(input);
-            P_TilePartLength = BigEndian.ReadUInt32(input);
+            I_TileIndexNumber = input.Read<UInt16>();
+            P_TilePartLength = input.Read<UInt32>();
             TP_TilePartInstance = input.ReadByte();
             TN_NumberOfTileParts = input.ReadByte();
 

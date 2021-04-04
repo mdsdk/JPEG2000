@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
+using MDSDK.BinaryIO;
 using MDSDK.JPEG2000.CodestreamSyntax;
 using MDSDK.JPEG2000.Model;
 using MDSDK.JPEG2000.MultipleComponentTransformation;
@@ -12,7 +13,7 @@ using static MDSDK.JPEG2000.Utils.StaticInclude;
 
 namespace MDSDK.JPEG2000
 {
-    public static class Jpeg2000Decoder
+    public static class JPEG2000Decoder
     {
         private static T GetCommonProperty<T>(TilePartComponent[] tilePartComponents, Func<TilePartComponent, T> getProperty)
         {
@@ -69,16 +70,24 @@ namespace MDSDK.JPEG2000
             inverseDCLevelShifter.CopyToPixelDataBuffer(tilePartComponent.TileComponent.Component, a, buffer, offset, count);
         }
 
-        public static int[] DecodeImage<TStream>(TStream stream, int bufferSize = 4096) where TStream : Stream
+        public static int[] DecodeImage(BinaryStreamReader input)
         {
-            var input = new GenericStreamReader<TStream>(stream, bufferSize);
-            var codestreamReader = new CodestreamReader(input);
-            var tilePartComponents = codestreamReader.DecodeCodeStream();
-            var image = codestreamReader.Image;
-            var siz = image.Header.SIZ;
-            var buffer = new int[siz.XT_TileWidth * siz.YT_TileHeight * siz.C_NumberOfImageComponents];
-            DecodeImage(image, tilePartComponents, buffer, 0, buffer.Length);
-            return buffer;
+            var originalByteOrder = input.ByteOrder;
+            input.ByteOrder = ByteOrder.BigEndian;
+            try
+            {
+                var codestreamReader = new CodestreamReader(input);
+                var tilePartComponents = codestreamReader.DecodeCodeStream();
+                var image = codestreamReader.Image;
+                var siz = image.Header.SIZ;
+                var buffer = new int[siz.XT_TileWidth * siz.YT_TileHeight * siz.C_NumberOfImageComponents];
+                DecodeImage(image, tilePartComponents, buffer, 0, buffer.Length);
+                return buffer;
+            }
+            finally
+            {
+                input.ByteOrder = originalByteOrder;
+            }
         }
     }
 }

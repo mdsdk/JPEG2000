@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
+using MDSDK.BinaryIO;
 using MDSDK.JPEG2000.Model;
 using MDSDK.JPEG2000.Utils;
+using System;
 using System.Diagnostics;
 
 namespace MDSDK.JPEG2000.CodestreamSyntax
@@ -14,10 +16,10 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         public MultipleComponentTransform SG_MultipleComponentTransform { get; protected set; }
 
-        private void Read_SG_Parameters(ByteReader input)
+        private void Read_SG_Parameters(BinaryStreamReader input)
         {
             SG_ProgressionOrder = (ProgressionOrder)input.ReadByte();
-            SG_NumberOfLayers = BigEndian.ReadUInt16(input);
+            SG_NumberOfLayers = input.Read<UInt16>();
             SG_MultipleComponentTransform = (MultipleComponentTransform)input.ReadByte();
         }
 

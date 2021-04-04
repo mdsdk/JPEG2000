@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
+using MDSDK.BinaryIO;
 using MDSDK.JPEG2000.Model;
 using MDSDK.JPEG2000.Utils;
 
@@ -23,12 +24,12 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         public abstract void ReadFrom(CodestreamReader input);
 
-        protected void Read_S_CodingStyle(ByteReader input)
+        protected void Read_S_CodingStyle(BinaryStreamReader input)
         {
             S_CodingStyle = (CodingStyle)input.ReadByte();
         }
 
-        protected void Read_SP_Parameters(ByteReader input)
+        protected void Read_SP_Parameters(BinaryStreamReader input)
         {
             SP_NumberOfDecompositionLevels = input.ReadByte();
             SP_CodeBlockWidthExponentOffsetValue = input.ReadByte();
