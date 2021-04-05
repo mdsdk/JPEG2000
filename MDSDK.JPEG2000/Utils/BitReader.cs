@@ -3,6 +3,7 @@
 using MDSDK.BinaryIO;
 using System;
 using System.Runtime.CompilerServices;
+using static MDSDK.JPEG2000.Utils.StaticInclude;
 
 namespace MDSDK.JPEG2000.Utils
 {
@@ -19,7 +20,7 @@ namespace MDSDK.JPEG2000.Utils
             _input = input;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         internal uint ReadBit()
         {
             if (_bitCount == 0)
@@ -34,7 +35,7 @@ namespace MDSDK.JPEG2000.Utils
             return bit;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         internal uint ReadBits(int n)
         {
             if (n > 32)

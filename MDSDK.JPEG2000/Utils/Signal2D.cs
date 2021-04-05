@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
 using System.Runtime.CompilerServices;
+using static MDSDK.JPEG2000.Utils.StaticInclude;
 
 namespace MDSDK.JPEG2000.Utils
 {
@@ -41,7 +42,7 @@ namespace MDSDK.JPEG2000.Utils
 
         public T this[int u, int v]
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [MethodImpl(HotspotMethodImplOptions)]
             get
             {
                 if (!URange.Contains(u, out int uOffset))
@@ -54,7 +55,7 @@ namespace MDSDK.JPEG2000.Utils
                 }
                 return _samples[vOffset * URange.Length + uOffset];
             }
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [MethodImpl(HotspotMethodImplOptions)]
             set
             {
                 if (!URange.Contains(u, out int uOffset))
@@ -69,7 +70,7 @@ namespace MDSDK.JPEG2000.Utils
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public void GetColumn(int u, Signal1D<T> column)
         {
             VRange.GetBounds(out int v0, out int v1);
@@ -80,7 +81,7 @@ namespace MDSDK.JPEG2000.Utils
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public void SetColumn(int u, Signal1D<T> column)
         {
             VRange.GetBounds(out int v0, out int v1);
@@ -91,7 +92,7 @@ namespace MDSDK.JPEG2000.Utils
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public void GetRow(int v, Signal1D<T> row)
         {
             URange.GetBounds(out int u0, out int u1);
@@ -102,7 +103,7 @@ namespace MDSDK.JPEG2000.Utils
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public void SetRow(int v, Signal1D<T> row)
         {
             URange.GetBounds(out int u0, out int u1);

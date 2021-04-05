@@ -2,6 +2,7 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using static MDSDK.JPEG2000.Utils.StaticInclude;
 
 namespace MDSDK.JPEG2000.CoefficientCoding
 {
@@ -15,13 +16,13 @@ namespace MDSDK.JPEG2000.CoefficientCoding
 
         public ContextVector ContextVector;
 
-        [MethodImpl(CoefficientDecoder.HotspotMethodImplOptions)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public Coefficient()
         {
             LastScannedInBitPlane = -1;
         }
 
-        [MethodImpl(CoefficientDecoder.HotspotMethodImplOptions)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public void ApplySignificance(sbyte sign, int bitPlane)
         {
             Sign = sign;
@@ -33,14 +34,14 @@ namespace MDSDK.JPEG2000.CoefficientCoding
             LastScannedInBitPlane = bitPlane;
         }
 
-        [MethodImpl(CoefficientDecoder.HotspotMethodImplOptions)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public void ApplyRefinement(int magnitudeBit, int bitPlane)
         {
             MagnitudeBits = (MagnitudeBits << 1) | magnitudeBit;
             LastScannedInBitPlane = bitPlane;
         }
 
-        [MethodImpl(CoefficientDecoder.HotspotMethodImplOptions)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public int GetValue()
         {
             return Sign * MagnitudeBits;

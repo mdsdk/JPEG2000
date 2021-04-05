@@ -3,19 +3,15 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using static MDSDK.JPEG2000.Utils.StaticInclude;
 using MDSDK.JPEG2000.Model;
 using MDSDK.JPEG2000.EntropyCoding;
 using MDSDK.JPEG2000.Utils;
+using static MDSDK.JPEG2000.Utils.StaticInclude;
 
 namespace MDSDK.JPEG2000.CoefficientCoding
 {
     class CoefficientDecoder
     {
-        private const bool OptimizeHotspotMethods = true;
-
-        public const MethodImplOptions HotspotMethodImplOptions = OptimizeHotspotMethods ? AggressiveMethodImplOptions : default;
-
         private CodeBlock CodeBlock { get; }
 
         private int Width { get; }
@@ -50,7 +46,7 @@ namespace MDSDK.JPEG2000.CoefficientCoding
             ContextArray = new Context[Context.Count];
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         private int GetCoefficientIndex(int x, int y)
         {
             return (y + 1) * (Width + 2) + (x + 1);
@@ -62,6 +58,7 @@ namespace MDSDK.JPEG2000.CoefficientCoding
             return CoefficientArray[GetCoefficientIndex(x, y)].ContextVector;
         }
 
+        [MethodImpl(HotspotMethodImplOptions)]
         private Context GetContext(int contextLabel)
         {
             var cx = ContextArray[contextLabel];
@@ -217,6 +214,7 @@ namespace MDSDK.JPEG2000.CoefficientCoding
             }
         }
 
+        [MethodImpl(HotspotMethodImplOptions)]
         private bool IsIncludedInCurrentCleanupPass(int x, int y)
         {
             var coefficient = CoefficientArray[GetCoefficientIndex(x, y)];

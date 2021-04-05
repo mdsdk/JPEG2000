@@ -73,7 +73,7 @@ namespace MDSDK.JPEG2000.EntropyCoding
             set => C = (uint)(value << 16) | (C & 0x0000FFFFU);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public int DecodeNextBit(Context ctx)
         {
             var qeTableRow_CTX_I = QeTable[ctx.I];

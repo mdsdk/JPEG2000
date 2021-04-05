@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Robin Boerdijk - All rights reserved - See LICENSE file for license terms
 
 using System.Runtime.CompilerServices;
+using static MDSDK.JPEG2000.Utils.StaticInclude;
 
 namespace MDSDK.JPEG2000.Utils
 {
@@ -23,7 +24,7 @@ namespace MDSDK.JPEG2000.Utils
 
         public T this[int i]
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [MethodImpl(HotspotMethodImplOptions)]
             get
             {
                 if (!Range.Contains(i, out int offsetInRange))
@@ -32,7 +33,7 @@ namespace MDSDK.JPEG2000.Utils
                 }
                 return _samples[offsetInRange];
             }
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [MethodImpl(HotspotMethodImplOptions)]
             set
             {
                 if (!Range.Contains(i, out int offsetInRange))
@@ -48,7 +49,7 @@ namespace MDSDK.JPEG2000.Utils
             return $"{typeof(T).Name}[{Range.Start}..{Range.End}) {{ {string.Join(", ", _samples)} }}";
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public static void ExtendPeriodicSymmetrically(Range range, Signal1D<T> yExt)
         {
             range.GetBounds(out int i0, out int i1);

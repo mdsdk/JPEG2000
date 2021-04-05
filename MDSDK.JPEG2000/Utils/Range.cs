@@ -2,6 +2,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using static MDSDK.JPEG2000.Utils.StaticInclude;
 
 namespace MDSDK.JPEG2000.Utils
 {
@@ -19,14 +20,14 @@ namespace MDSDK.JPEG2000.Utils
 
         public int End => Start + Length;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public void GetBounds(out int start, out int end)
         {
             start = Start;
             end = End;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         public bool Contains(int i, out int offset)
         {
             offset = i - Start;

@@ -72,7 +72,7 @@ namespace MDSDK.JPEG2000.WaveletTransformation
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         private static void Perform2DInterleave(Signal2D<T> a, Signal2D<T> b, SubbandType subbandType)
         {
             static Range GetHalfRange(Range range, SubbandType.Filter filter)
@@ -113,7 +113,7 @@ namespace MDSDK.JPEG2000.WaveletTransformation
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         private static void Perform2DInterleave(Signal2D<T> a, Signal2D<T> aLL, Signal2D<T> aHL, Signal2D<T> aLH, Signal2D<T> aHH)
         {
             Perform2DInterleave(a, aLL, SubbandType.LL);
@@ -122,7 +122,7 @@ namespace MDSDK.JPEG2000.WaveletTransformation
             Perform2DInterleave(a, aHH, SubbandType.HH);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         private void PerformHorizontalSubbandReconstruction(Signal2D<T> a)
         {
             var extendedRange = Get1DExtendedRange(a.URange);
@@ -140,7 +140,7 @@ namespace MDSDK.JPEG2000.WaveletTransformation
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         private void PerformVerticalSubbandReconstruction(Signal2D<T> a)
         {
             var extendedRange = Get1DExtendedRange(a.VRange);
@@ -201,7 +201,7 @@ namespace MDSDK.JPEG2000.WaveletTransformation
             }, state => { });
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         private Range Get1DExtendedRange(Range range)
         {
             range.GetBounds(out int i0, out int i1);
@@ -230,7 +230,7 @@ namespace MDSDK.JPEG2000.WaveletTransformation
 
         protected abstract void Apply1DFilter(Range range, Signal1D<T> yExt, Signal1D<T> xExt);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         private void Perform1DSubbandReconstruction(Range range, Signal1D<T> yExt, Signal1D<T> xExt)
         {
             range.GetBounds(out int i0, out int i1);
@@ -259,7 +259,7 @@ namespace MDSDK.JPEG2000.WaveletTransformation
 
         protected sealed override int DivideBy2(int value) => value / 2;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         protected sealed override void Apply1DFilter(Range range, Signal1D<int> yExt, Signal1D<int> xExt)
         {
             range.GetBounds(out int i0, out int i1);
@@ -292,7 +292,7 @@ namespace MDSDK.JPEG2000.WaveletTransformation
     {
         protected sealed override float DivideBy2(float value) => value / 2;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         protected sealed override void Apply1DFilter(Range range, Signal1D<float> yExt, Signal1D<float> xExt)
         {
             range.GetBounds(out int i0, out int i1);
@@ -356,7 +356,7 @@ namespace MDSDK.JPEG2000.WaveletTransformation
     {
         protected sealed override double DivideBy2(double value) => value / 2;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(HotspotMethodImplOptions)]
         protected sealed override void Apply1DFilter(Range range, Signal1D<double> yExt, Signal1D<double> xExt)
         {
             range.GetBounds(out int i0, out int i1);

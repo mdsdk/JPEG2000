@@ -2,6 +2,7 @@
 
 using MDSDK.JPEG2000.Model;
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace MDSDK.JPEG2000.CoefficientCoding
