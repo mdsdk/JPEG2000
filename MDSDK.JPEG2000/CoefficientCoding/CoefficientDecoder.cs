@@ -89,6 +89,7 @@ namespace MDSDK.JPEG2000.CoefficientCoding
             return sign;
         }
 
+        [MethodImpl(HotspotMethodImplOptions)]
         private void UpdateNeighbourContextVectors(int x, int y, sbyte sign)
         {
             var left = x - 1;
