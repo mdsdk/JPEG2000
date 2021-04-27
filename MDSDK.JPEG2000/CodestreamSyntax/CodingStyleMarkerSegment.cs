@@ -24,18 +24,18 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         public abstract void ReadFrom(CodestreamReader input);
 
-        protected void Read_S_CodingStyle(BinaryStreamReader input)
+        protected void Read_S_CodingStyle(BinaryDataReader dataReader)
         {
-            S_CodingStyle = (CodingStyle)input.ReadByte();
+            S_CodingStyle = (CodingStyle)dataReader.ReadByte();
         }
 
-        protected void Read_SP_Parameters(BinaryStreamReader input)
+        protected void Read_SP_Parameters(BinaryDataReader dataReader)
         {
-            SP_NumberOfDecompositionLevels = input.ReadByte();
-            SP_CodeBlockWidthExponentOffsetValue = input.ReadByte();
-            SP_CodeBlockHeightExponentOffsetValue = input.ReadByte();
-            SP_CodeBlockCodingPassStyle = (CodeBlockCodingPassStyle)input.ReadByte();
-            SP_WaveletTransformUsed = (WaveletTransform)input.ReadByte();
+            SP_NumberOfDecompositionLevels = dataReader.ReadByte();
+            SP_CodeBlockWidthExponentOffsetValue = dataReader.ReadByte();
+            SP_CodeBlockHeightExponentOffsetValue = dataReader.ReadByte();
+            SP_CodeBlockCodingPassStyle = (CodeBlockCodingPassStyle)dataReader.ReadByte();
+            SP_WaveletTransformUsed = (WaveletTransform)dataReader.ReadByte();
 
             SP_ResolutionPrecinctSizes = new PrecinctSize[SP_NumberOfDecompositionLevels + 1];
 
@@ -43,7 +43,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
             {
                 if ((S_CodingStyle & CodingStyle.CustomPrecinctSizesUsed) != 0)
                 {
-                    var pps = input.ReadByte();
+                    var pps = dataReader.ReadByte();
                     SP_ResolutionPrecinctSizes[i] = new PrecinctSize(pps & 0x0F, pps >> 4);
                 }
                 else

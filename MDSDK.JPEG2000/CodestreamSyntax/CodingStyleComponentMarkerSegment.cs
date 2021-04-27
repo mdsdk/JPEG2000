@@ -11,27 +11,27 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
     {
         public int C_ComponentIndex { get; private set; }
 
-        private void Read_C_ComponentIndex(BinaryStreamReader input, int nComponents)
+        private void Read_C_ComponentIndex(BinaryDataReader dataReader, int nComponents)
         {
             if (nComponents > 256)
             {
-                C_ComponentIndex = input.Read<UInt16>();
+                C_ComponentIndex = dataReader.Read<UInt16>();
             }
             else
             {
-                C_ComponentIndex = input.ReadByte();
+                C_ComponentIndex = dataReader.ReadByte();
             }
         }
 
-        public override void ReadFrom(CodestreamReader reader)
+        public override void ReadFrom(CodestreamReader input)
         {
-            var input = reader.Input;
+            var dataReader = input.DataReader;
 
-            Read_C_ComponentIndex(input, reader.Image.Header.SIZ.C_NumberOfImageComponents);
-            Read_S_CodingStyle(input);
-            Read_SP_Parameters(input);
+            Read_C_ComponentIndex(dataReader, input.Image.Header.SIZ.C_NumberOfImageComponents);
+            Read_S_CodingStyle(dataReader);
+            Read_SP_Parameters(dataReader);
 
-            Debug.Assert(input.AtEnd);
+            Debug.Assert(dataReader.Input.AtEnd);
         }
     }
 }

@@ -37,42 +37,42 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
             public byte YR_VerticalSubSamplingFactor { get; set; }
 
-            public static ComponentSpecification ReadFrom(BinaryStreamReader input)
+            public static ComponentSpecification ReadFrom(BinaryDataReader dataReader)
             {
                 return new ComponentSpecification
                 {
-                    S_PrecisionAndSignOfComponentSamples = input.ReadByte(),
-                    XR_HorizontalSubSamplingFactor = input.ReadByte(),
-                    YR_VerticalSubSamplingFactor = input.ReadByte()
+                    S_PrecisionAndSignOfComponentSamples = dataReader.ReadByte(),
+                    XR_HorizontalSubSamplingFactor = dataReader.ReadByte(),
+                    YR_VerticalSubSamplingFactor = dataReader.ReadByte()
                 };
             }
         }
 
         public ComponentSpecification[] ComponentSpecifications { get; private set; }
 
-        public void ReadFrom(CodestreamReader reader)
+        public void ReadFrom(CodestreamReader input)
         {
-            var input = reader.Input;
+            var dataReader = input.DataReader;
 
-            R_CapabilitiesOfCodestream = input.Read<UInt16>();
-            X_ReferenceGridWidth = checked((int)input.Read<UInt32>());
-            Y_ReferenceGridHeight = checked((int)input.Read<UInt32>());
-            XO_HorizontalOffsetOfImageAreaInReferenceGrid = checked((int)input.Read<UInt32>());
-            YO_VerticalOffsetOfImageAreaInReferenceGrid = checked((int)input.Read<UInt32>());
-            XT_TileWidth = checked((int)input.Read<UInt32>());
-            YT_TileHeight = checked((int)input.Read<UInt32>());
-            XT_HorizontalOffsetOfFirstTileInReferenceGrid = checked((int)input.Read<UInt32>());
-            YTO_VerticalOffsetOfFirstTileInReferenceGrid = checked((int)input.Read<UInt32>());
-            C_NumberOfImageComponents = input.Read<UInt16>();
+            R_CapabilitiesOfCodestream = dataReader.Read<UInt16>();
+            X_ReferenceGridWidth = checked((int)dataReader.Read<UInt32>());
+            Y_ReferenceGridHeight = checked((int)dataReader.Read<UInt32>());
+            XO_HorizontalOffsetOfImageAreaInReferenceGrid = checked((int)dataReader.Read<UInt32>());
+            YO_VerticalOffsetOfImageAreaInReferenceGrid = checked((int)dataReader.Read<UInt32>());
+            XT_TileWidth = checked((int)dataReader.Read<UInt32>());
+            YT_TileHeight = checked((int)dataReader.Read<UInt32>());
+            XT_HorizontalOffsetOfFirstTileInReferenceGrid = checked((int)dataReader.Read<UInt32>());
+            YTO_VerticalOffsetOfFirstTileInReferenceGrid = checked((int)dataReader.Read<UInt32>());
+            C_NumberOfImageComponents = dataReader.Read<UInt16>();
 
             var componentSpecifications = new ComponentSpecification[C_NumberOfImageComponents];
             for (var i = 0; i < componentSpecifications.Length; i++)
             {
-                componentSpecifications[i] = ComponentSpecification.ReadFrom(input);
+                componentSpecifications[i] = ComponentSpecification.ReadFrom(dataReader);
             }
             ComponentSpecifications = componentSpecifications;
 
-            Debug.Assert(input.AtEnd);
+            Debug.Assert(dataReader.Input.AtEnd);
         }
     }
 }

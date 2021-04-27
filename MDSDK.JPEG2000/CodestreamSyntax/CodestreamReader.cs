@@ -15,13 +15,17 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 {
     internal class CodestreamReader
     {
-        public BinaryStreamReader Input { get; }
+        public BufferedStreamReader RawInput { get; }
+
+        public BinaryDataReader DataReader { get; }
 
         public Image Image { get; }
 
-        public CodestreamReader(BinaryStreamReader input)
+        public CodestreamReader(BufferedStreamReader input)
         {
-            Input = input;
+            RawInput = input;
+
+            DataReader = new BinaryDataReader(input, ByteOrder.BigEndian);
 
             var imageHeader = ReadImageHeader();
 
@@ -85,14 +89,14 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
             Marker marker;
             do
             {
-                var tilePartStartPosition = Input.Position - 2;
+                var tilePartStartPosition = DataReader.Input.Position - 2;
 
                 var tilePartHeader = ReadTilePartHeader();
 
                 tilePartComponents = DecodePackets(tilePartHeader);
 
                 var tilePartEndPosition = tilePartStartPosition + tilePartHeader.SOT.P_TilePartLength;
-                Input.SkipBytes(tilePartEndPosition - Input.Position);
+                DataReader.Input.SkipBytes(tilePartEndPosition - DataReader.Input.Position);
 
                 marker = ReadMarker(); 
 
@@ -110,22 +114,23 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         private Marker ReadMarker()
         {
-            var b = Input.ReadByte();
+            var b = DataReader.ReadByte();
             if (b != 0xFF)
             {
                 throw new IOException($"Expected 0xFF to start marker but got 0x{b:X2}");
             }
-            b = Input.ReadByte();
+            b = DataReader.ReadByte();
             return new Marker((ushort)(0xFF00 | b));
         }
 
         private void ReadMarkerSegment(Action read)
         {
-            var length = Input.Read<UInt16>();
-            Input.Read(length - 2, () =>
+            var length = DataReader.Read<UInt16>();
+            var input = DataReader.Input;
+            input.Read(length - 2, () =>
             {
                 read.Invoke();
-                Input.SkipRemainingBytes();
+                input.SkipRemainingBytes();
             });
         }
 
@@ -183,7 +188,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         private void DecodePacket(int layer, ResolutionLevel resolutionLevel)
         {
-            var bitReader = new BitReader(Input);
+            var bitReader = new BitReader(DataReader.Input);
 
             var packetIsPresent = bitReader.ReadBit() != 0;
             if (packetIsPresent)
@@ -205,7 +210,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
             }
 
             var bytes = new byte[codeBlock.LengthInBytes + 2];
-            Input.ReadAll(bytes.AsSpan(0, (int)codeBlock.LengthInBytes));
+            DataReader.Read(bytes.AsSpan(0, (int)codeBlock.LengthInBytes));
 
             // Two 0xFF bytes must be added to flush the entropy coder (see D.4.1 "Expected codestream termination")
 

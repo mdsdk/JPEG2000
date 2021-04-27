@@ -70,24 +70,15 @@ namespace MDSDK.JPEG2000
             inverseDCLevelShifter.CopyToPixelDataBuffer(tilePartComponent.TileComponent.Component, a, buffer, offset, count);
         }
 
-        public static int[] DecodeImage(BinaryStreamReader input)
+        public static int[] DecodeImage(BufferedStreamReader input)
         {
-            var originalByteOrder = input.ByteOrder;
-            input.ByteOrder = ByteOrder.BigEndian;
-            try
-            {
-                var codestreamReader = new CodestreamReader(input);
-                var tilePartComponents = codestreamReader.DecodeCodeStream();
-                var image = codestreamReader.Image;
-                var siz = image.Header.SIZ;
-                var buffer = new int[siz.XT_TileWidth * siz.YT_TileHeight * siz.C_NumberOfImageComponents];
-                DecodeImage(image, tilePartComponents, buffer, 0, buffer.Length);
-                return buffer;
-            }
-            finally
-            {
-                input.ByteOrder = originalByteOrder;
-            }
+            var codestreamReader = new CodestreamReader(input);
+            var tilePartComponents = codestreamReader.DecodeCodeStream();
+            var image = codestreamReader.Image;
+            var siz = image.Header.SIZ;
+            var buffer = new int[siz.XT_TileWidth * siz.YT_TileHeight * siz.C_NumberOfImageComponents];
+            DecodeImage(image, tilePartComponents, buffer, 0, buffer.Length);
+            return buffer;
         }
     }
 }

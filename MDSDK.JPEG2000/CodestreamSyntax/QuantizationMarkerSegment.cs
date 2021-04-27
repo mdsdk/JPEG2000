@@ -18,20 +18,20 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         public QuantizationStepSize[] QuantizationStepSizes { get; private set; }
 
-        private void ReadReversibleStepSizes(BinaryStreamReader input)
+        private void ReadReversibleStepSizes(BinaryDataReader dataReader)
         {
-            ReversibleStepSizes = new ReversibleStepSize[input.BytesRemaining];
+            ReversibleStepSizes = new ReversibleStepSize[dataReader.BytesRemaining];
 
             for (var i = 0; i < ReversibleStepSizes.Length; i++)
             {
-                var b = input.ReadByte();
+                var b = dataReader.ReadByte();
                 ReversibleStepSizes[i] = new ReversibleStepSize(b);
             }
         }
 
-        private void ReadQuantizationStepSizes(BinaryStreamReader input)
+        private void ReadQuantizationStepSizes(BinaryDataReader input)
         {
-            QuantizationStepSizes = new QuantizationStepSize[input.BytesRemaining / 2];
+            QuantizationStepSizes = new QuantizationStepSize[input.GetRemainingDataCount<UInt16>()];
 
             for (var i = 0; i < QuantizationStepSizes.Length; i++)
             {
@@ -40,26 +40,26 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
             }
         }
 
-        protected void Read_S_QuantizationStyle(BinaryStreamReader input)
+        protected void Read_S_QuantizationStyle(BinaryDataReader input)
         {
             var b = input.ReadByte();
             QuantizationStyle = (QuantizationStyle)(b & 0x1F);
             NGuardBits_G = b >> 5;
         }
 
-        protected void Read_SP_Parameters(BinaryStreamReader input)
+        protected void Read_SP_Parameters(BinaryDataReader dataReader)
         {
             if (QuantizationStyle == QuantizationStyle.NoQuantization)
             {
-                ReadReversibleStepSizes(input);
+                ReadReversibleStepSizes(dataReader);
             }
             else if (QuantizationStyle == QuantizationStyle.ScalarDerived)
             {
-                ReadQuantizationStepSizes(input);
+                ReadQuantizationStepSizes(dataReader);
             }
             else if (QuantizationStyle == QuantizationStyle.ScalarExpounded)
             {
-                ReadQuantizationStepSizes(input);
+                ReadQuantizationStepSizes(dataReader);
             }
             else
             {

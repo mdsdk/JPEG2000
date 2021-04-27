@@ -14,13 +14,13 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         public string DataAsString { get; private set; }
 
-        public void ReadFrom(CodestreamReader reader)
+        public void ReadFrom(CodestreamReader input)
         {
-            var input = reader.Input;
+            var dataReader = input.DataReader;
 
-            R_RegistrationValue = input.Read<UInt16>();
+            R_RegistrationValue = dataReader.Read<UInt16>();
 
-            Data = input.ReadRemainingBytes();
+            Data = dataReader.Input.ReadRemainingBytes();
 
             if (R_RegistrationValue == 1)
             {

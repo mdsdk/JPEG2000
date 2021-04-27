@@ -11,9 +11,9 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
             Marker = marker;
         }
 
-        public void ReadFrom(CodestreamReader reader)
+        public void ReadFrom(CodestreamReader input)
         {
-            reader.Input.SkipRemainingBytes();
+            input.DataReader.Input.SkipRemainingBytes();
         }
     }
 }

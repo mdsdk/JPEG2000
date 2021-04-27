@@ -10,7 +10,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
     {
         public int C_ComponentIndex { get; private set; }
 
-        private void Read_C_ComponentIndex(BinaryStreamReader input, int nComponents)
+        private void Read_C_ComponentIndex(BinaryDataReader input, int nComponents)
         {
             if (nComponents > 256)
             {
@@ -24,9 +24,9 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         public override void ReadFrom(CodestreamReader reader)
         {
-            Read_C_ComponentIndex(reader.Input, reader.Image.Components.Length);
-            Read_S_QuantizationStyle(reader.Input);
-            Read_SP_Parameters(reader.Input);
+            Read_C_ComponentIndex(reader.DataReader, reader.Image.Components.Length);
+            Read_S_QuantizationStyle(reader.DataReader);
+            Read_SP_Parameters(reader.DataReader);
         }
     }
 }

@@ -9,13 +9,13 @@ namespace MDSDK.JPEG2000.Utils
 {
     class BitReader
     {
-        private readonly BinaryStreamReader _input;
+        private readonly BufferedStreamReader _input;
 
         private uint _bits;
 
         private int _bitCount;
 
-        internal BitReader(BinaryStreamReader input)
+        internal BitReader(BufferedStreamReader input)
         {
             _input = input;
         }

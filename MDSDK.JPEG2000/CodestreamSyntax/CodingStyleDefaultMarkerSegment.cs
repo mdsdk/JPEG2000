@@ -16,22 +16,22 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         public MultipleComponentTransform SG_MultipleComponentTransform { get; protected set; }
 
-        private void Read_SG_Parameters(BinaryStreamReader input)
+        private void Read_SG_Parameters(BinaryDataReader input)
         {
             SG_ProgressionOrder = (ProgressionOrder)input.ReadByte();
             SG_NumberOfLayers = input.Read<UInt16>();
             SG_MultipleComponentTransform = (MultipleComponentTransform)input.ReadByte();
         }
 
-        public override void ReadFrom(CodestreamReader reader)
+        public override void ReadFrom(CodestreamReader input)
         {
-            var input = reader.Input;
+            var dataReader = input.DataReader;
 
-            Read_S_CodingStyle(input);
-            Read_SG_Parameters(input);
-            Read_SP_Parameters(input);
+            Read_S_CodingStyle(dataReader);
+            Read_SG_Parameters(dataReader);
+            Read_SP_Parameters(dataReader);
             
-            Debug.Assert(input.AtEnd);
+            Debug.Assert(dataReader.Input.AtEnd);
         }
     }
 }

@@ -18,14 +18,14 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         public void ReadFrom(CodestreamReader reader)
         {
-            var input = reader.Input;
+            var dataReader = reader.DataReader;
 
-            I_TileIndexNumber = input.Read<UInt16>();
-            P_TilePartLength = input.Read<UInt32>();
-            TP_TilePartInstance = input.ReadByte();
-            TN_NumberOfTileParts = input.ReadByte();
+            I_TileIndexNumber = dataReader.Read<UInt16>();
+            P_TilePartLength = dataReader.Read<UInt32>();
+            TP_TilePartInstance = dataReader.ReadByte();
+            TN_NumberOfTileParts = dataReader.ReadByte();
 
-            Debug.Assert(input.AtEnd);
+            Debug.Assert(dataReader.Input.AtEnd);
         }
     }
 }

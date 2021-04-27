@@ -6,8 +6,8 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
     {
         public override void ReadFrom(CodestreamReader reader)
         {
-            Read_S_QuantizationStyle(reader.Input);
-            Read_SP_Parameters(reader.Input);
+            Read_S_QuantizationStyle(reader.DataReader);
+            Read_SP_Parameters(reader.DataReader);
         }
     }
 }
