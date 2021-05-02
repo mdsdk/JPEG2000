@@ -84,7 +84,7 @@ namespace MDSDK.JPEG2000.CoefficientCoding
             var cx = GetContext(contextLabel);
             var d = EntropyCoder.DecodeNextBit(cx);
             var signBit = d ^ xorBit;
-            sbyte sign = (signBit == 0) ? 1 : -1;
+            var sign = (sbyte)((signBit == 0) ? 1 : -1);
             UpdateNeighbourContextVectors(x, y, sign);
             return sign;
         }
