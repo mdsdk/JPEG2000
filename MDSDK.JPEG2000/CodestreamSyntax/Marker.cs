@@ -70,7 +70,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
         public static readonly Marker COD = new Marker(0xFF52); // Coding style default
         public static readonly Marker COC = new Marker(0xFF53); // Coding style component
         public static readonly Marker QCD = new Marker(0xFF5C); // Quantization default
-        public static readonly Marker QCC = new Marker(0xFF5D); // Quantization componenent
+        public static readonly Marker QCC = new Marker(0xFF5D); // Quantization component
         public static readonly Marker RGN = new Marker(0xFF5E); // Region-of-interest
         public static readonly Marker POD = new Marker(0xFF5F); // Progression order default
 

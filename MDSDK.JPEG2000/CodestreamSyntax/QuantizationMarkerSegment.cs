@@ -20,7 +20,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         private void ReadReversibleStepSizes(BinaryDataReader dataReader)
         {
-            ReversibleStepSizes = new ReversibleStepSize[dataReader.BytesRemaining];
+            ReversibleStepSizes = new ReversibleStepSize[dataReader.GetRemainingDatumCount<byte>()];
 
             for (var i = 0; i < ReversibleStepSizes.Length; i++)
             {
@@ -31,7 +31,7 @@ namespace MDSDK.JPEG2000.CodestreamSyntax
 
         private void ReadQuantizationStepSizes(BinaryDataReader input)
         {
-            QuantizationStepSizes = new QuantizationStepSize[input.GetRemainingDataCount<UInt16>()];
+            QuantizationStepSizes = new QuantizationStepSize[input.GetRemainingDatumCount<UInt16>()];
 
             for (var i = 0; i < QuantizationStepSizes.Length; i++)
             {
