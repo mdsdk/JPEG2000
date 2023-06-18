@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MDSDK.JPEG2000.Convert": {
+      "commandName": "Project",
+      "commandLineArgs": "InputFolder=D:\\Temp\\JPEG2000TestFiles OutputFolder=D:\\Temp file2.jp2 file1.jp2"
+    }
+  }
+}
