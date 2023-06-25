@@ -38,6 +38,7 @@ namespace MDSDK.JPEG2000.Convert
             {
                 Colourspace.sRGB => GetSRGBPixelCreator(),
                 Colourspace.sYCC => GetSYCCPixelCreator(),
+                Colourspace.Greyscale => GetGreyscalePixelCreator(),
                 _ => throw NotSupported(Colourspace)
             };
         }
@@ -83,6 +84,24 @@ namespace MDSDK.JPEG2000.Convert
                 int Clamp(double x) => (int)Math.Max(0, Math.Min(x, 255));
 
                 return Color.FromArgb(255, Clamp(r), Clamp(g), Clamp(b));
+            }
+
+            return GetPixelColor;
+        }
+
+        private BitmapPixelCreator GetGreyscalePixelCreator()
+        {
+            ThrowIf(Components.Length != 1);
+            
+            var component = Components[0];
+
+            ThrowIf(component.IsSigned);
+            ThrowIf(component.BitDepth != 8);
+
+            Color GetPixelColor(int[] imageData, ref int i)
+            {
+                var pixelValue = imageData[i++];
+                return Color.FromArgb(255, pixelValue, pixelValue, pixelValue);
             }
 
             return GetPixelColor;
