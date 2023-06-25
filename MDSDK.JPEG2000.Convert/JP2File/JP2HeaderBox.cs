@@ -34,26 +34,33 @@ namespace MDSDK.JPEG2000.Convert.JP2File
             imageDescriptor.Width = (int)imageHeader.Width;
             imageDescriptor.Height = (int)imageHeader.Height;
 
-            var colourSpecification = NestedBoxes.OfType<ColourSpecificationBox>().First(
-                o => o.EnumeratedColourspace != null);
-
-            imageDescriptor.Colourspace = colourSpecification.EnumeratedColourspace.Value switch
+            Colourspace GetFallbackColourSpace()
             {
-                16 => Colourspace.sRGB,
-                17 => Colourspace.Greyscale,
-                18 => Colourspace.sYCC,
-                _ => imageHeader.NumberOfComponents switch
+                return imageHeader.NumberOfComponents switch
                 {
                     1 => Colourspace.Greyscale,
                     3 => Colourspace.sRGB,
-                    _=> throw NotSupported(colourSpecification.EnumeratedColourspace.Value)
-                }
-            };
+                    _ => throw NotSupported(imageHeader.NumberOfComponents)
+                };
+            }
+
+            var colourSpecification = NestedBoxes.OfType<ColourSpecificationBox>().FirstOrDefault(
+                o => o.EnumeratedColourspace != null);
+
+            imageDescriptor.Colourspace = (colourSpecification == null)
+                ? GetFallbackColourSpace()
+                : colourSpecification.EnumeratedColourspace.Value switch
+                {
+                    16 => Colourspace.sRGB,
+                    17 => Colourspace.Greyscale,
+                    18 => Colourspace.sYCC,
+                    _ => GetFallbackColourSpace()
+                };
 
             var bitsPerComponents = NestedBoxes.OfType<BitsPerComponentBox>().ToArray();
 
             imageDescriptor.Components = new ImageComponentDescriptor[imageHeader.NumberOfComponents];
-            
+
             for (var i = 0; i < imageDescriptor.Components.Length; i++)
             {
                 var bitsPerComponent = (imageHeader.BitsPerComponent == 255)
@@ -78,7 +85,7 @@ namespace MDSDK.JPEG2000.Convert.JP2File
                     imageDescriptor.Components[channelDescription.ChannelIndex].ChannelDescription = channelDescription;
                 }
             }
-            
+
             return imageDescriptor;
         }
     }
