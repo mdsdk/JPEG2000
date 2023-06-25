@@ -4,6 +4,7 @@ using static MDSDK.JPEG2000.Utils.StaticInclude;
 using System.Diagnostics;
 using System.Drawing;
 using System;
+using System.Linq;
 
 namespace MDSDK.JPEG2000.Convert
 {
@@ -43,17 +44,30 @@ namespace MDSDK.JPEG2000.Convert
             };
         }
 
+        private static int ClampTo8Bit(double x) => (int)Math.Max(0, Math.Min(x, 255));
+
         private BitmapPixelCreator GetSRGBPixelCreator()
         {
+            ThrowIf(Components.Length != 3);
+            ThrowIf(Components.Any(o => o.IsSigned));
+
             var rComponentIndex = GetColorComponentIndex(1, 0);
             var gComponentIndex = GetColorComponentIndex(2, 1);
             var bComponentIndex = GetColorComponentIndex(3, 2);
 
+            var rComponent = Components[rComponentIndex];
+            var gComponent = Components[gComponentIndex];
+            var bComponent = Components[bComponentIndex];
+
+            var rMaxValue = (1 << rComponent.BitDepth) - 1;
+            var gMaxValue = (1 << gComponent.BitDepth) - 1;
+            var bMaxValue = (1 << bComponent.BitDepth) - 1;
+
             Color GetPixelColor(int[] imageData, ref int i)
             {
-                var r = imageData[i + rComponentIndex];
-                var g = imageData[i + gComponentIndex];
-                var b = imageData[i + bComponentIndex];
+                var r = ClampTo8Bit(255.0 * imageData[i + rComponentIndex] / rMaxValue);
+                var g = ClampTo8Bit(255.0 * imageData[i + gComponentIndex] / gMaxValue);
+                var b = ClampTo8Bit(255.0 * imageData[i + bComponentIndex] / bMaxValue);
 
                 i += 3;
                 
@@ -62,8 +76,6 @@ namespace MDSDK.JPEG2000.Convert
 
             return GetPixelColor;
         }
-
-        private static int ClampTo8Bit(double x) => (int)Math.Max(0, Math.Min(x, 255));
 
         private BitmapPixelCreator GetSYCCPixelCreator()
         {
