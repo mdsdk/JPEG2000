@@ -9,7 +9,7 @@ namespace MDSDK.JPEG2000.MultipleComponentTransformation
 {
     abstract class InverseDCLevelShifter
     {
-        public abstract void CopyToPixelDataBuffer(Component component, Signal2D a, int[] buffer, int offset, int count);
+        public abstract void CopyToPixelBuffer(Component component, Signal2D a, PixelBuffer pixelBuffer);
 
         public static InverseDCLevelShifter Create(ArithmeticType arithmeticType)
         {
@@ -25,23 +25,25 @@ namespace MDSDK.JPEG2000.MultipleComponentTransformation
 
     abstract class InverseDCLevelShifter<T> : InverseDCLevelShifter
     {
-        public sealed override void CopyToPixelDataBuffer(Component component, Signal2D signal, int[] buffer, int offset, int count)
+        public sealed override void CopyToPixelBuffer(Component component, Signal2D signal, PixelBuffer pixelBuffer)
         {
             var a = (Signal2D<T>)signal;
 
             var siz = component.Image.Header.SIZ;
 
-            ThrowIf(a.URange.Length != siz.XT_TileWidth);
-            ThrowIf(a.VRange.Length != siz.YT_TileHeight);
+            var uSubSamplingFactor = component.SIZ.XR_HorizontalSubSamplingFactor;
+            var vSubSamplingFactor = component.SIZ.YR_VerticalSubSamplingFactor;
+
+            ThrowIf(a.URange.Length * uSubSamplingFactor != siz.XT_TileWidth);
+            ThrowIf(a.VRange.Length * vSubSamplingFactor != siz.YT_TileHeight);
 
             var nComponents = siz.C_NumberOfImageComponents;
 
-            ThrowIf(count != nComponents * siz.XT_TileWidth * siz.YT_TileHeight);
+            ThrowIf(pixelBuffer.Data.Length != nComponents * siz.XT_TileWidth * siz.YT_TileHeight);
 
             a.URange.GetBounds(out int u0, out int u1);
             a.VRange.GetBounds(out int v0, out int v1);
 
-            var i = offset + component.ComponentIndex;
             for (var v = v0; v < v1; v++)
             {
                 for (var u = u0; u < u1; u++)
@@ -55,8 +57,8 @@ namespace MDSDK.JPEG2000.MultipleComponentTransformation
                     {
                         sampleValue = component.MaxSampleValue;
                     }
-                    buffer[i] = sampleValue;
-                    i += nComponents;
+                    pixelBuffer.SetPixelValue(uSubSamplingFactor, vSubSamplingFactor,
+                        u, v, component.ComponentIndex, sampleValue);
                 }
             }
         }
