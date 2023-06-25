@@ -63,6 +63,8 @@ namespace MDSDK.JPEG2000.Convert
             return GetPixelColor;
         }
 
+        private static int ClampTo8Bit(double x) => (int)Math.Max(0, Math.Min(x, 255));
+
         private BitmapPixelCreator GetSYCCPixelCreator()
         {
             var yComponentIndex = GetColorComponentIndex(1, 0);
@@ -81,9 +83,7 @@ namespace MDSDK.JPEG2000.Convert
                 var g = y - 0.344136 * (cb - 128) - 0.714136 * (cr - 128);
                 var b = y + 1.772 * (cb - 128);
 
-                int Clamp(double x) => (int)Math.Max(0, Math.Min(x, 255));
-
-                return Color.FromArgb(255, Clamp(r), Clamp(g), Clamp(b));
+                return Color.FromArgb(255, ClampTo8Bit(r), ClampTo8Bit(g), ClampTo8Bit(b));
             }
 
             return GetPixelColor;
@@ -96,11 +96,12 @@ namespace MDSDK.JPEG2000.Convert
             var component = Components[0];
 
             ThrowIf(component.IsSigned);
-            ThrowIf(component.BitDepth != 8);
+
+            var maxValue = (1 << component.BitDepth) - 1;
 
             Color GetPixelColor(int[] imageData, ref int i)
             {
-                var pixelValue = imageData[i++];
+                var pixelValue = ClampTo8Bit(255.0 * imageData[i++] / maxValue);
                 return Color.FromArgb(255, pixelValue, pixelValue, pixelValue);
             }
 
