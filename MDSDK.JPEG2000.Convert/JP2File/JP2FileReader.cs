@@ -35,7 +35,7 @@ namespace MDSDK.JPEG2000.Convert.JP2File
 
             boxHeader = BoxHeader.ReadFrom(DataReader);
             var fileTypeBox = ReadBox<FileTypeBox>(boxHeader);
-            ThrowIf(fileTypeBox.Brand != "jp2 ");
+            ThrowIf((fileTypeBox.Brand != "jp2 ") && (fileTypeBox.Brand != "jpx "));
 
             boxHeader = BoxHeader.ReadFrom(DataReader);
             while (boxHeader.BoxType != BoxType.ContiguousCodestream)

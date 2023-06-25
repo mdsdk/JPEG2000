@@ -34,15 +34,20 @@ namespace MDSDK.JPEG2000.Convert.JP2File
             imageDescriptor.Width = (int)imageHeader.Width;
             imageDescriptor.Height = (int)imageHeader.Height;
 
-            var colourSpecification = NestedBoxes.OfType<ColourSpecificationBox>().Single();
-            ThrowIf(colourSpecification.EnumeratedColourspace == null);
+            var colourSpecification = NestedBoxes.OfType<ColourSpecificationBox>().First(
+                o => o.EnumeratedColourspace != null);
 
             imageDescriptor.Colourspace = colourSpecification.EnumeratedColourspace.Value switch
             {
                 16 => Colourspace.sRGB,
                 17 => Colourspace.Greyscale,
                 18 => Colourspace.sYCC,
-                _ => throw NotSupported(colourSpecification.EnumeratedColourspace.Value)
+                _ => imageHeader.NumberOfComponents switch
+                {
+                    1 => Colourspace.Greyscale,
+                    3 => Colourspace.sRGB,
+                    _=> throw NotSupported(colourSpecification.EnumeratedColourspace.Value)
+                }
             };
 
             var bitsPerComponents = NestedBoxes.OfType<BitsPerComponentBox>().ToArray();
